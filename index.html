@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chakra Harmony Guide</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Babel for in-browser JSX transformation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              serif: ['"Zen Old Mincho"', 'serif'],
+              sans: ['"Zen Kaku Gothic New"', 'sans-serif'],
+            },
+            colors: {
+              beige: {
+                50: '#FDFCF8',
+                100: '#F9F7F0',
+                200: '#F0EBE0',
+                300: '#E6DEC9',
+                400: '#D6C8A8',
+                500: '#C2B088',
+                800: '#5C5443',
+                900: '#3D382C',
+              },
+              chakra: {
+                1: '#E53935',
+                2: '#FB8C00',
+                3: '#FDD835',
+                4: '#43A047',
+                5: '#1E88E5',
+                6: '#3949AB',
+                7: '#8E24AA',
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #FDFCF8;
+        color: #5C5443;
+      }
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #F9F7F0;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #D6C8A8;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #C2B088;
+      }
+      @keyframes spin-slow {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      @keyframes reverse-spin {
+        from { transform: scale(0.7) rotate(360deg); }
+        to { transform: scale(0.7) rotate(0deg); }
+      }
+      .animate-spin-slow {
+        animation: spin-slow 20s linear infinite;
+      }
+      .animate-reverse-spin {
+        animation: reverse-spin 15s linear infinite;
+      }
+      @keyframes bounce-subtle {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+      }
+      .animate-bounce-subtle {
+        animation: bounce-subtle 3s ease-in-out infinite;
+      }
+    </style>
+  <link rel="stylesheet" href="/index.css">
+  <script type="module" crossorigin src="/assets/index-B5Qt9EMX.js"></script>
+</head>
+  <body>
+    <div id="root"></div>
+
+    <!-- App Logic -->
+    <script type="text/babel" data-presets="typescript,react" data-type="module">
+      import React, { useState, useEffect } from 'https://esm.sh/react@18.2.0';
+      import { createRoot } from 'https://esm.sh/react-dom@18.2.0/client';
+      import { HashRouter, Routes, Route, useNavigate, useParams } from 'https://esm.sh/react-router-dom@6.22.3?deps=react@18.2.0,react-dom@18.2.0';
+      import { ChevronRight, Sparkles, HeartPulse, ArrowLeft } from 'https://esm.sh/lucide-react@0.358.0?deps=react@18.2.0';
+
+      // --- Types ---
+      interface ChakraData {
+        id: number;
+        name: string;
+        sanskritName: string;
+        englishName: string;
+        color: string;
+        colorCode: string;
+        themeColorClass: string;
+        summary: string;
+        location: string;
+        organs: string;
+        sound: string;
+        stone: string;
+        element: string;
+        planet: string;
+        aroma: string;
+        mental: string;
+        energy: string;
+        lesson: string;
+        balanced: string;
+        unbalancedState: string;
+        diseases: string;
+      }
+
+      // --- Data ---
+      const CHAKRA_LIST: ChakraData[] = [
+        {
+          id: 1,
+          name: "第1チャクラ",
+          sanskritName: "ムーラダーラ",
+          englishName: "Root Chakra",
+          color: "赤",
+          colorCode: "#E53935",
+          themeColorClass: "text-red-600",
+          summary: "生命力、生存、安心感、土台",
+          location: "会陰（生殖器と肛門の間）、脊柱の基底",
+          organs: "副腎、骨、結腸、脚、足、直腸、免疫系",
+          sound: "396 Hz (C)",
+          stone: "ルビー、ガーネット、ヘマタイト、レッドジャスパー、ブラックトルマリン",
+          element: "土",
+          planet: "土星、地球",
+          aroma: "シダーウッド、パチュリ、ベチバー、ジンジャー",
+          mental: "安心感、生存本能、現実への対応力、忍耐、帰属意識、忠誠心",
+          energy: "大地に根を張り、現実世界を力強く生きるためのエネルギー",
+          lesson: "生存、物質界との繋がり、自立\n※ 肉体を持って生きる基盤を作る",
+          balanced: "大地にしっかりと足がついている感覚があり、生きるための基本的な安心感で満たされます。\n体力や気力が充実し、毎日をエネルギッシュに行動することができます。\n「自分は大丈夫」という根拠のない自信と、経済的な安定を引き寄せる力が湧いてきます。\n困難なことがあっても動じない、どっしりとした強さを持てるようになります。\n睡眠の質が良くなり、朝スッキリと目覚められるようになります。\n家族や組織との絆を大切にし、感謝の気持ちが自然と湧いてきます。\n現実的な問題解決能力が高まり、着実に目標に向かって進めます。\n生きている喜びを身体全体で感じられ、生命力が輝き出します。",
+          unbalancedState: "将来への漠然とした不安や、お金に対する恐怖が常に頭から離れません。\n常に何かに追われているような焦りを感じ、心休まる時間がありません。\n現実逃避したくなり、ふわふわとして地に足がつかない感覚になります。\nやる気が起きず、無気力で、一日中だるさを感じてしまいます。\n「自分には居場所がない」という孤独感や疎外感に襲われます。\n変化を極端に恐れ、新しい一歩を踏み出す勇気が出なくなります。\n暴飲暴食や買い物依存など、物質的なもので心を満たそうとします。\n便秘や冷え性など、下半身の不調を感じやすくなります。",
+          diseases: "便秘、坐骨神経痛、足のトラブル、免疫不全、摂食障害、うつ病"
+        },
+        {
+          id: 2,
+          name: "第2チャクラ",
+          sanskritName: "スヴァディシュターナ",
+          englishName: "Sacral Chakra",
+          color: "オレンジ",
+          colorCode: "#FB8C00",
+          themeColorClass: "text-orange-500",
+          summary: "情緒、性、創造性、喜び",
+          location: "丹田（おへその数センチ下）、仙骨",
+          organs: "生殖器、膀胱、腎臓、体液（血液、リンパ液など）",
+          sound: "417 Hz (D)",
+          stone: "カーネリアン、オレンジカルサイト、ムーンストーン、サンストーン",
+          element: "水",
+          planet: "月、冥王星",
+          aroma: "イランイラン、ジャスミン、オレンジ、サンダルウッド",
+          mental: "感情の豊かさ、欲求、セクシャリティ、創造性、社交性、変化への適応",
+          energy: "人生を楽しみ、情熱と創造性を生み出すエネルギー",
+          lesson: "感情の流れ、パートナーシップ、喜び\n※ 他者との関わりの中で自分を知る",
+          balanced: "人生を心から楽しむことができ、喜びや情熱が身体の内側から溢れてきます。\n感情表現が豊かになり、自分の気持ちを素直に受け入れられます。\n創造性が高まり、新しいアイデアやインスピレーションが次々と湧きます。\nパートナーや他人と、親密で温かい信頼関係を築くことができます。\n自分の女性性（男性性）を肯定し、自然な魅力を発揮できるようになります。\n変化を恐れず、人生の流れに身を任せて楽しむ余裕が生まれます。\n「やりたい！」という純粋な欲求に従って、素直に行動できます。\n美味しい食事や美しい景色など、五感で感じる幸せを深く味わえます。",
+          unbalancedState: "感情の起伏が激しくなり、ちょっとしたことで情緒不安定になります。\n自分に自信が持てず、他人への依存心や嫉妬心が強くなってしまいます。\n異性関係のトラブルや、パートナーシップの問題を繰り返しやすくなります。\n「どうせ私なんて」と、人生に対する情熱や喜びを感じられなくなります。\n過去の恋愛や人間関係のトラウマに囚われ、前に進めなくなります。\n創造力が枯渇し、何をやっても楽しいと感じられず、退屈に感じます。\n過度な禁欲、または快楽への過度な溺れなど、極端な行動に走ります。\n生理不順や腰痛など、生殖器系や腰回りの不調が出やすくなります。",
+          diseases: "婦人科系疾患、生理不順、インポテンツ、腰痛、膀胱炎、腎臓の不調"
+        },
+        {
+          id: 3,
+          name: "第3チャクラ",
+          sanskritName: "マニプーラ",
+          englishName: "Solar Plexus Chakra",
+          color: "黄",
+          colorCode: "#FDD835",
+          themeColorClass: "text-yellow-600",
+          summary: "個の確立、意志の力、自信",
+          location: "胃、みぞおち",
+          organs: "肝臓、血管、すい臓、十二指腸、脾臓、横隔膜、副腎、腎臓",
+          sound: "126.22 Hz (528Hzなど諸説あり)",
+          stone: "シトリン、レモンクォーツ、トパーズ、タイガーアイ、ムーンストーン、アパタイト、カルサイト、サルファー",
+          element: "火",
+          planet: "火星、太陽",
+          aroma: "レモン、グレープフルーツ、ジュニパー、タイム、レモングラス",
+          mental: "喜び、楽しみ、プラス思考、信頼、恐れ、脅迫、自尊の念、自信、自分や人を大切にすること、決めたことに対する責任、批判への対応、個人の尊厳",
+          energy: "自分らしさを見出すためのエネルギー",
+          lesson: "個性、思考\n※ 第1チャクラと第2チャクラで社会性を学んで第3チャクラで個性を学ぶ",
+          balanced: "自分に確かな自信を持ち、自分の価値を心から信じることができます。\n周りの意見に流されず、自分の意志で人生を選択し決断できます。\n「私はできる」というポジティブなエネルギーに満ち、チャレンジ精神が湧きます。\n失敗を恐れずに挑戦し、そこから学ぶ強さを持つことができます。\n他人と自分を比較することなく、自分らしさを堂々と表現できます。\n内臓の働きが活発になり、消化吸収が良く、身体が軽く感じられます。\n責任感が生まれ、自分で決めたことを最後までやり遂げる力がつきます。\nユーモアのセンスが溢れ、周りを明るくする太陽のような存在になれます。",
+          unbalancedState: "自分に自信が持てなくなり、常に他人の顔色を伺ってしまいます。\n「NO」と言えずに、やりたくないことを引き受けてストレスを溜めます。\n他人をコントロールしようとしたり、支配的な態度をとってしまいます。\n批判されることを極端に恐れ、自分の意見を言うのが怖くなります。\n怒りっぽくなったり、イライラを周りにぶつけてしまうことが増えます。\n「どうせ失敗する」というネガティブな思考がループしてしまいます。\n胃がキリキリしたり、消化不良を起こすなど、お腹の調子が悪くなります。\n甘いものへの渇望や、カフェインへの依存が強くなることがあります。",
+          diseases: "関節炎、胃潰瘍、消化不良、慢性疲労、アレルギー、糖尿病、肝臓障害、副腎系の病気など"
+        },
+        {
+          id: 4,
+          name: "第4チャクラ",
+          sanskritName: "アナハタ",
+          englishName: "Heart Chakra",
+          color: "緑 / ピンク",
+          colorCode: "#43A047",
+          themeColorClass: "text-green-600",
+          summary: "愛、調和、許し、慈悲",
+          location: "胸の中央、心臓",
+          organs: "心臓、肺、循環器系、胸腺、腕、手",
+          sound: "639 Hz (F)",
+          stone: "ローズクォーツ、アベンチュリン、エメラルド、翡翠、ピンクトルマリン、クンツァイト",
+          element: "風（空）",
+          planet: "金星",
+          aroma: "ローズ、ゼラニウム、ベルガモット、ユーカリ",
+          mental: "無条件の愛、共感、受容、平和、許し、信頼、希望",
+          energy: "自分と他者を愛し、全ての存在とのつながりを感じるエネルギー",
+          lesson: "愛すること、許すこと、慈悲\n※ 下位の物質的チャクラと上位の精神的チャクラを統合する",
+          balanced: "ありのままの自分を愛し、大切にすることができるようになります。\n見返りを求めない無条件の愛を、他者にも自然と注げるようになります。\n過去の傷やわだかまりを許し、心を軽くして手放すことができます。\n人とのつながりに温かさを感じ、孤独感から解放されます。\n呼吸が深くゆったりとなり、常に穏やかで平和な気持ちでいられます。\n他人の痛みに共感し、優しく寄り添う慈悲の心が育ちます。\n周りの環境や人間関係が、愛と調和に満ちたものへと変化します。\n「愛されている」という安心感の中で、リラックスして過ごせます。",
+          unbalancedState: "孤独感が強く、誰ともつながっていないような寂しさを感じます。\n他人を信じられなくなり、疑い深くなったり心を閉ざしてしまいます。\n嫉妬心や独占欲が強くなり、相手を束縛しようとしてしまいます。\n自分を犠牲にしてまで他人に尽くしすぎ、後で虚しくなります。\n過去の辛い出来事を何度も思い出し、恨みや悲しみを引きずります。\n批判的になり、他人の欠点ばかりが目について許せなくなります。\n呼吸が浅くなり、胸が締め付けられるような苦しさを感じることがあります。\n愛を受け取ることが怖くなり、好意を素直に喜べなくなります。",
+          diseases: "心臓疾患、高血圧、肺のトラブル、喘息、アレルギー、肩こり、乳がん"
+        },
+        {
+          id: 5,
+          name: "第5チャクラ",
+          sanskritName: "ヴィシュッダ",
+          englishName: "Throat Chakra",
+          color: "水色 / 青",
+          colorCode: "#1E88E5",
+          themeColorClass: "text-blue-500",
+          summary: "コミュニケーション、表現、真実",
+          location: "喉、首の付け根",
+          organs: "喉、甲状腺、副甲状腺、声帯、気管、食道、耳、口",
+          sound: "741 Hz (G)",
+          stone: "ターコイズ、アクアマリン、ラピスラズリ、ソーダライト、ブルレースアゲート",
+          element: "エーテル（音）",
+          planet: "水星",
+          aroma: "カモミール、ペパーミント、ユーカリ、ティーツリー",
+          mental: "自己表現、コミュニケーション、正直さ、創造的な表現、意志の疎通、聞く力",
+          energy: "内なる真実を語り、創造性を表現するエネルギー",
+          lesson: "自己表現、真実を語る勇気\n※ 自分の意志を世界に発信する",
+          balanced: "自分の思ったことや感じたことを、正直かつ適切な言葉で伝えられます。\n声に張りが出て、話すことが楽しくなり、言葉に説得力が生まれます。\n他人の話にも真摯に耳を傾け、深いコミュニケーションがとれます。\n嘘や偽りのない、自分自身の真実を生きている実感を持てます。\n歌ったり、書いたり、創造的な表現活動を通して自分を解放できます。\n「言いたいことが言えた」というスッキリとした感覚を日々感じられます。\nタイミングよく必要な情報を得たり、発信したりできるようになります。\n自分の夢や目標を言葉にすることで、実現を加速させることができます。",
+          unbalancedState: "言いたいことがあるのに飲み込んでしまい、喉に詰まった感じがします。\n本音を隠して、周りに合わせたことばかり言って疲れてしまいます。\n人の話を聞けずに、一方的に喋りすぎたり、知ったかぶりをします。\n噂話や悪口、不平不満ばかりが口から出てしまうようになります。\n声が小さくなったり、震えたりして、人前で話すのが怖くなります。\n「どうせわかってもらえない」と、コミュニケーションを諦めてしまいます。\n喉の痛みや首の凝り、甲状腺の不調などが現れやすくなります。\n自分の本当の気持ちがわからなくなり、表現することにブロックを感じます。",
+          diseases: "喉の痛み、甲状腺疾患、扁桃炎、難聴、口内炎、首の凝り"
+        },
+        {
+          id: 6,
+          name: "第6チャクラ",
+          sanskritName: "アージュニャー",
+          englishName: "Third Eye Chakra",
+          color: "藍色",
+          colorCode: "#3949AB",
+          themeColorClass: "text-indigo-700",
+          summary: "直感、叡智、洞察力",
+          location: "眉間（第三の目）",
+          organs: "脳（下垂体）、目、耳、鼻、神経系",
+          sound: "852 Hz (A)",
+          stone: "ラピスラズリ、アメジスト、アズライト、サファイア、ソーダライト",
+          element: "光",
+          planet: "木星、海王星",
+          aroma: "ローズマリー、ラベンダー、クラリセージ、フランキンセンス",
+          mental: "直感力、洞察力、想像力、知恵、集中力、本質を見抜く力",
+          energy: "物質的な世界を超え、本質を見抜く叡智のエネルギー",
+          lesson: "直感、真実を見る目\n※ 目に見えない世界を感じ取る",
+          balanced: "直感が冴え渡り、「なんとなく」感じたことが正しいことが増えます。\n物事の表面だけでなく、本質や裏にある真実を見抜けるようになります。\n集中力が高まり、今やるべきことが明確に見えてきます。\n素晴らしいアイデアやビジョンが、鮮明な映像として浮かびます。\n感情に振り回されず、客観的で冷静な判断ができるようになります。\n夢がメッセージを伝えてくれたり、シンクロニシティが増えます。\n自分に必要な道や、人生の目的がはっきりと理解できるようになります。\n知的な好奇心が満たされ、学ぶことや考えることが喜びになります。",
+          unbalancedState: "考えすぎて頭がパンパンになり、常に頭痛や眼精疲労を感じます。\n直感を信じられず、理屈やデータばかりを重視して迷ってしまいます。\n集中力が続かず、物忘れが増えたり、ぼんやりすることが多くなります。\n現実と空想の区別がつかなくなり、妄想に囚われてしまいます。\n「未来が怖い」というネガティブな想像ばかりして不安になります。\n自分の殻に閉じこもり、他人の意見や新しい考えを受け入れられません。\n悪夢を見たり、睡眠が浅くなったりして、脳が休まらない感覚があります。\n物事を悲観的に捉えすぎて、解決策が見えなくなってしまいます。",
+          diseases: "頭痛、眼精疲労、視力障害、脳腫瘍、精神疾患、不眠症"
+        },
+        {
+          id: 7,
+          name: "第7チャクラ",
+          sanskritName: "サハスラーラ",
+          englishName: "Crown Chakra",
+          color: "紫 / 白 / 金",
+          colorCode: "#8E24AA",
+          themeColorClass: "text-purple-600",
+          summary: "高次との繋がり、霊性、悟り",
+          location: "頭頂部",
+          organs: "脳（松果体）、大脳皮質、皮膚",
+          sound: "963 Hz (B)",
+          stone: "アメジスト、水晶（クリアクォーツ）、ダイヤモンド、セレナイト",
+          element: "宇宙（空）",
+          planet: "天王星",
+          aroma: "ラベンダー、フランキンセンス、ローズウッド、ロータス",
+          mental: "ワンネス、霊的な目覚め、宇宙意識、至福、神聖さ",
+          energy: "宇宙や高次の意識と繋がり、全ては一つであることを知るエネルギー",
+          lesson: "霊性、超越、解放\n※ エゴを手放し、大いなる流れに委ねる",
+          balanced: "深い心の平安と、言葉にできない至福感に包まれて過ごせます。\n「全ては一つ」というワンネスの感覚を肌で感じることができます。\n人生で起こる全ての出来事に意味を見出し、感謝できるようになります。\n執着が手放され、大いなる宇宙の流れに身を委ねて生きられます。\n孤独感が完全に消え、常に守られているという安心感があります。\nインスピレーションが降りてきやすく、人生の目的を生きられます。\n偏見や差別意識がなくなり、全ての人を対等な存在として愛せます。\n物質的な豊かさだけでなく、精神的な充足感を常に感じています。",
+          unbalancedState: "生きる意味が見出せず、虚無感や深い絶望感を感じてしまいます。\n自分の殻に閉じこもり、世界から切り離されたような孤独を感じます。\n思考が混乱し、何が正しいのかわからず、精神的に不安定になります。\nスピリチュアルな世界に逃避しすぎて、現実生活がおろそかになります。\n「自分だけが正しい」という独善的な考えに固執してしまいます。\n慢性的な疲労感や、原因不明の体調不良が続くことがあります。\n物質的な成功や名声だけに価値を置き、心が満たされません。\n頭が重く感じたり、常に霧がかかったようなスッキリしない状態です。",
+          diseases: "うつ病、慢性疲労、認知症、てんかん、脳の疾患、精神的錯乱"
+        }
+      ];
+
+      // --- Components ---
+
+      // Layout
+      const Layout = ({ children }) => {
+        return (
+          <div className="min-h-screen flex flex-col font-sans text-stone-600 bg-beige-50">
+            {/* Header */}
+            <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-beige-200">
+              <div className="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+                <h1 className="font-serif text-xl sm:text-2xl text-stone-800 tracking-wider">
+                  <a href="#" className="hover:opacity-70 transition-opacity">Chakra Guide</a>
+                </h1>
+                <nav className="text-sm font-medium text-stone-500">
+                  <span className="hidden sm:inline">Inner Balance & Harmony</span>
+                </nav>
+              </div>
+            </header>
+
+            {/* Main Content */}
+            <main className="flex-grow flex flex-col">
+              {children}
+            </main>
+
+            {/* Footer */}
+            <footer className="bg-stone-800 text-beige-200 py-8 mt-auto pb-24">
+              <div className="max-w-4xl mx-auto px-4 text-center">
+                <p className="font-serif italic mb-2">"Align your energy, align your life."</p>
+                <p className="text-xs text-stone-400">&copy; {new Date().getFullYear()} Chakra Harmony Guide. All Rights Reserved.</p>
+              </div>
+            </footer>
+          </div>
+        );
+      };
+
+      // Chakra Detail
+      const DetailRow = ({ title, content, isLast }) => (
+        <div className={`flex flex-col sm:flex-row border-b border-beige-300 ${isLast ? 'border-b-0' : ''}`}>
+          <div className="w-full sm:w-1/3 md:w-1/4 bg-beige-100/50 p-4 font-serif font-bold text-stone-700 flex items-center">
+            {title}
+          </div>
+          <div className="w-full sm:w-2/3 md:w-3/4 p-4 bg-white text-stone-600 leading-relaxed whitespace-pre-wrap">
+            {content}
+          </div>
+        </div>
+      );
+
+      const ChakraDetail = ({ chakra, onBack }) => {
+        useEffect(() => {
+          window.scrollTo(0, 0);
+        }, [chakra.id]);
+
+        return (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-4xl mx-auto w-full px-4 py-8 sm:px-6 lg:px-8">
+            <button 
+              onClick={onBack}
+              className="group flex items-center text-stone-500 hover:text-stone-800 transition-colors mb-6 font-medium"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+              チャクラ一覧に戻る
+            </button>
+
+            <div className="bg-white rounded-2xl shadow-sm border border-beige-200 overflow-hidden mb-8">
+              <div className="relative h-32 sm:h-48 overflow-hidden">
+                <div 
+                  className="absolute inset-0 opacity-20"
+                  style={{ backgroundColor: chakra.colorCode }}
+                ></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                   <div 
+                      className="w-24 h-24 rounded-full blur-3xl opacity-60"
+                      style={{ backgroundColor: chakra.colorCode }}
+                   ></div>
+                </div>
+                <div className="relative z-10 h-full flex flex-col items-center justify-center p-6 text-center">
+                  <span className="text-sm tracking-widest uppercase text-stone-500 mb-2 font-sans font-semibold">
+                    {chakra.englishName}
+                  </span>
+                  <h2 className="font-serif text-3xl sm:text-4xl text-stone-800 font-bold mb-2">
+                    {chakra.name}
+                  </h2>
+                  <p className="text-stone-600 font-serif italic">
+                    {chakra.sanskritName}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-lg shadow-stone-200/50 border border-beige-300 overflow-hidden">
+              <div className="p-4 bg-beige-50 border-b-2 border-beige-300 flex items-center">
+                 <span className={`w-3 h-8 mr-3 rounded-full`} style={{ backgroundColor: chakra.colorCode }}></span>
+                 <h3 className="font-serif text-xl font-bold text-stone-800">基本情報と特徴</h3>
+              </div>
+
+              <div className="flex flex-col">
+                <DetailRow 
+                  title="色" 
+                  content={
+                    <div className="flex items-center gap-2">
+                      <span 
+                        className="w-4 h-4 rounded-full border border-stone-200 shadow-sm" 
+                        style={{ backgroundColor: chakra.colorCode }}
+                      ></span>
+                      <span className="font-medium">{chakra.color}</span>
+                    </div>
+                  } 
+                />
+                <DetailRow title="位置" content={chakra.location} />
+                <DetailRow title="臓器" content={chakra.organs} />
+                <DetailRow title="音" content={<span className="font-mono text-sm bg-beige-100 px-2 py-1 rounded text-stone-600">{chakra.sound}</span>} />
+                <DetailRow title="石" content={chakra.stone} />
+                <DetailRow title="元素" content={chakra.element} />
+                <DetailRow title="惑星" content={chakra.planet} />
+                <DetailRow title="アロマオイル" content={chakra.aroma} />
+                
+                <div className="bg-beige-50 p-4 border-y border-beige-300 font-serif font-bold text-stone-800 mt-2">
+                  心理・エネルギー的側面
+                </div>
+
+                <DetailRow title="精神・感情面" content={chakra.mental} />
+                <DetailRow title="エネルギー" content={chakra.energy} />
+                <DetailRow title="学ぶこと" content={chakra.lesson} />
+                
+                <div className="bg-beige-50 p-4 border-y border-beige-300 font-serif font-bold text-stone-800 mt-2">
+                  状態と影響
+                </div>
+
+                <DetailRow title="このチャクラが整っていることで得られる効果" content={chakra.balanced} />
+                <DetailRow title="このチャクラが乱れているときの状態" content={chakra.unbalancedState} />
+                <DetailRow title="このチャクラが乱れているときになりえる病気" content={chakra.diseases} isLast />
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      // Chakra Icon (Mandala)
+      const ChakraIcon = ({ color, id }) => {
+        return (
+          <div className="relative w-16 h-16 flex items-center justify-center">
+            <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full animate-spin-slow" style={{ animationDuration: '20s' }}>
+              {[...Array(8)].map((_, i) => (
+                <path
+                  key={i}
+                  d="M50 50 Q65 20 50 0 Q35 20 50 50"
+                  fill={color}
+                  fillOpacity="0.2"
+                  transform={`rotate(${i * 45} 50 50)`}
+                />
+              ))}
+            </svg>
+            <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full animate-reverse-spin" style={{ animationDuration: '15s', transform: 'scale(0.7)' }}>
+              {[...Array(8)].map((_, i) => (
+                <path
+                  key={i}
+                  d="M50 50 Q60 25 50 10 Q40 25 50 50"
+                  fill={color}
+                  fillOpacity="0.4"
+                  transform={`rotate(${i * 45 + 22.5} 50 50)`}
+                />
+              ))}
+            </svg>
+            <div 
+              className="relative z-10 w-8 h-8 rounded-full flex items-center justify-center text-white font-serif font-bold shadow-md"
+              style={{ backgroundColor: color }}
+            >
+              {id}
+            </div>
+          </div>
+        );
+      };
+
+      // Home Page
+      const HomePage = () => {
+        const navigate = useNavigate();
+        const [selectedId, setSelectedId] = useState("");
+
+        const handleDropdownChange = (e) => {
+          const id = e.target.value;
+          setSelectedId(id);
+          if (id) {
+            navigate(`/chakra/${id}`);
+          }
+        };
+
+        return (
+          <div className="max-w-5xl mx-auto px-4 py-12 sm:px-6 lg:px-8 pb-32">
+            {/* Hero Section */}
+            <div className="relative text-center mb-20 space-y-6">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 sm:w-96 h-64 sm:h-96 bg-orange-100/50 rounded-full blur-3xl -z-10 pointer-events-none"></div>
+
+              <div className="inline-flex items-center justify-center px-4 py-2 bg-white/60 backdrop-blur-sm border border-orange-100 rounded-full shadow-sm">
+                <Sparkles className="w-4 h-4 text-orange-300 mr-2" />
+                <span className="text-xs font-medium text-stone-500 tracking-widest uppercase">Spiritual Wellness</span>
+              </div>
+
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-stone-700 leading-relaxed tracking-wide">
+                <span className="block text-stone-400 text-sm sm:text-base md:text-lg mb-3 font-sans font-light tracking-[0.2em] uppercase">
+                  Discover Your
+                </span>
+                <span className="inline-block">Inner Energy</span> <span className="inline-block text-orange-400/80 italic font-light">Centers</span>
+              </h2>
+
+              <div className="max-w-xl mx-auto text-base text-stone-600 leading-8">
+                <p className="inline-block mx-1">チャクラは心と身体をつなぐ</p>
+                <p className="inline-block mx-1">エネルギーの出入り口。</p>
+                <div className="h-2 sm:hidden"></div>
+                <p className="inline-block mx-1">7つのチャクラを知り、整えることで、</p>
+                <p className="inline-block mx-1">本来の輝きを取り戻しましょう。</p>
+              </div>
+            </div>
+
+            {/* Select Dropdown */}
+            <div className="max-w-md mx-auto mb-16 bg-white p-6 rounded-2xl shadow-sm border border-beige-200">
+              <label htmlFor="chakra-select" className="block text-sm font-medium text-stone-500 mb-2 text-center">
+                チャクラを選択して詳細を見る
+              </label>
+              <div className="relative">
+                <select
+                  id="chakra-select"
+                  value={selectedId}
+                  onChange={handleDropdownChange}
+                  className="block w-full pl-4 pr-10 py-4 text-base border-beige-300 focus:outline-none focus:ring-2 focus:ring-beige-400 focus:border-beige-400 sm:text-sm rounded-xl bg-beige-50 text-stone-700 cursor-pointer appearance-none transition-shadow hover:shadow-md"
+                >
+                  <option value="" disabled>-- チャクラを選択してください --</option>
+                  {CHAKRA_LIST.map((chakra) => (
+                    <option key={chakra.id} value={chakra.id}>
+                      {chakra.id}. {chakra.name} ({chakra.color})
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-stone-500">
+                  <ChevronRight className="w-5 h-5 rotate-90" />
+                </div>
+              </div>
+            </div>
+
+            {/* Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {CHAKRA_LIST.map((chakra) => (
+                <button
+                  key={chakra.id}
+                  onClick={() => navigate(`/chakra/${chakra.id}`)}
+                  className="group relative bg-white rounded-xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-beige-100 hover:border-beige-300 text-left flex flex-col items-center sm:items-start overflow-hidden"
+                >
+                  <div className={`absolute -right-8 -top-8 w-40 h-40 rounded-full opacity-5 transition-transform group-hover:scale-110`} style={{ backgroundColor: chakra.colorCode }}></div>
+                  
+                  <div className="flex items-center w-full mb-4">
+                    <div className="mr-4 flex-shrink-0 group-hover:scale-110 transition-transform duration-500">
+                      <ChakraIcon color={chakra.colorCode} id={chakra.id} />
+                    </div>
+                    <div className="flex flex-col">
+                       <span className="text-xs font-bold tracking-widest uppercase text-stone-400 mb-1">
+                        {chakra.englishName}
+                      </span>
+                      <h3 className="text-xl font-serif font-bold text-stone-800 group-hover:text-stone-600 transition-colors">
+                        {chakra.name}
+                      </h3>
+                    </div>
+                  </div>
+                  
+                  <p className="text-stone-500 text-sm line-clamp-2 mb-4 w-full text-center sm:text-left">
+                    {chakra.summary}
+                  </p>
+                  
+                  <div className="mt-auto w-full flex justify-end items-center text-sm font-medium text-stone-400 group-hover:text-stone-800 transition-colors">
+                    詳細を見る <ChevronRight className="w-4 h-4 ml-1" />
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            {/* Floating FAB */}
+            <a 
+              href="https://sdasjjep.gensparkspace.com/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="fixed bottom-6 right-6 z-50 flex flex-col items-center group"
+            >
+              <div className="bg-gradient-to-tr from-rose-400 to-orange-300 text-white rounded-full p-4 shadow-xl shadow-orange-200 hover:shadow-2xl hover:scale-105 transition-all duration-300 animate-bounce-subtle border-2 border-white">
+                <HeartPulse className="w-8 h-8" />
+              </div>
+              <span className="mt-2 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-stone-600 shadow-sm border border-stone-100 group-hover:text-orange-500 transition-colors whitespace-nowrap">
+                チャクラ診断する
+              </span>
+            </a>
+          </div>
+        );
+      };
+
+      // App & Routes
+      const DetailRouteWrapper = () => {
+        const { id } = useParams();
+        const navigate = useNavigate();
+        
+        const chakra = CHAKRA_LIST.find(c => c.id === Number(id));
+
+        if (!chakra) {
+          useEffect(() => {
+            navigate('/');
+          }, [navigate]);
+          return null;
+        }
+
+        return <ChakraDetail chakra={chakra} onBack={() => navigate('/')} />;
+      };
+
+      const App = () => {
+        return (
+          <HashRouter>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/chakra/:id" element={<DetailRouteWrapper />} />
+              </Routes>
+            </Layout>
+          </HashRouter>
+        );
+      };
+
+      // Mount
+      const rootElement = document.getElementById('root');
+      if (rootElement) {
+        const root = createRoot(rootElement);
+        root.render(<App />);
+      }
+    </script>
+</body>
+</html>
